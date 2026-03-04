@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lynn's Kids Garden - KET Adventure</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="deco deco-1" aria-hidden="true">🌸</div>
+  <div class="deco deco-2" aria-hidden="true">✨</div>
+  <div class="deco deco-3" aria-hidden="true">🦋</div>
+  <main class="app-shell">
+    <header class="hero">
+      <h1>Lynn's Kids Garden</h1>
+      <p class="subtitle">A cute English adventure for KET students 🌼</p>
+    </header>
+
+    <nav class="side-tabs" aria-label="main sections">
+      <button class="side-tab active" data-tab-target="student">Student Quiz</button>
+      <button class="side-tab" data-tab-target="wordgame">Word Fill Game</button>
+      <button class="side-tab" data-tab-target="platformer">Clear Game</button>
+      <button class="side-tab" data-tab-target="records">Student Records</button>
+      <button class="side-tab" data-tab-target="teacher">Teacher Page</button>
+    </nav>
+
+    <section class="card" id="setupCard" data-panel="student">
+      <h2>Start Your Garden Journey</h2>
+      <p class="hint">Enter student info and begin from easy to hard questions.</p>
+      <div class="form-row">
+        <label for="studentName">Student Name</label>
+        <input id="studentName" type="text" maxlength="40" placeholder="e.g. Amy">
+      </div>
+      <div class="form-row">
+        <label for="studentClass">Class / Group</label>
+        <input id="studentClass" type="text" maxlength="40" placeholder="e.g. KET-A">
+      </div>
+      <label class="toggle-row" for="timedModeToggle">
+        <input id="timedModeToggle" type="checkbox">
+        <span>Timed Mode (20s per question)</span>
+      </label>
+      <label class="toggle-row" for="soundToggle">
+        <input id="soundToggle" type="checkbox">
+        <span>Sound Effects (countdown + victory)</span>
+      </label>
+      <button id="startBtn" class="btn btn-primary">Start Adventure</button>
+      <p id="setupError" class="error-text" aria-live="polite"></p>
+    </section>
+
+    <section class="card hidden" id="quizCard" data-panel="student">
+      <div class="top-meta">
+        <span id="levelBadge" class="badge">Easy</span>
+        <div class="top-right">
+          <span id="progressText" class="progress-text">Question 1 / 18</span>
+          <div class="game-hud">
+            <span class="hud-item" id="livesValue">❤️ 3</span>
+            <span class="hud-item" id="starsValue">⭐ 0</span>
+            <span class="hud-item" id="streakValue">🔥 x0</span>
+            <span class="hud-item" id="timerValue">⏱ --</span>
+          </div>
+        </div>
+      </div>
+      <div class="progress-bar" aria-hidden="true">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+      <p id="levelBanner" class="level-banner hidden" aria-live="polite"></p>
+
+      <div class="story-box" id="storyCue"></div>
+      <h2 id="questionText"></h2>
+      <div id="optionsWrap" class="options-wrap"></div>
+
+      <div class="feedback-row">
+        <p id="feedbackText" class="feedback" aria-live="polite"></p>
+        <button id="nextBtn" class="btn btn-secondary hidden">Next</button>
+      </div>
+    </section>
+
+    <section class="card hidden" id="summaryCard" data-panel="student">
+      <h2>Garden Report</h2>
+      <p id="studentHeadline" class="summary-headline"></p>
+      <div class="summary-grid">
+        <div class="mini-stat">
+          <span>Total Score</span>
+          <strong id="totalScore">0 / 18</strong>
+        </div>
+        <div class="mini-stat">
+          <span>Accuracy</span>
+          <strong id="accuracyRate">0%</strong>
+        </div>
+        <div class="mini-stat">
+          <span>Level Result</span>
+          <strong id="proficiencyTag">Starter Bloom</strong>
+        </div>
+        <div class="mini-stat">
+          <span>Game Stars</span>
+          <strong id="gameStars">0</strong>
+        </div>
+        <div class="mini-stat">
+          <span>Best Combo</span>
+          <strong id="bestCombo">x0</strong>
+        </div>
+      </div>
+      <p id="summaryAdvice" class="hint"></p>
+      <div class="badge-wall">
+        <h3>Badge Wall</h3>
+        <ul id="badgeWallList" class="badge-list"></ul>
+      </div>
+
+      <div class="summary-actions">
+        <button id="restartBtn" class="btn btn-primary">New Student Test</button>
+        <button id="exportCurrentBtn" class="btn btn-secondary">Export Current JSON</button>
+        <button id="exportCsvBtn" class="btn btn-secondary">Export All CSV</button>
+      </div>
+    </section>
+
+    <section class="card" id="historyCard" data-panel="records">
+      <h2>Saved Student Reports</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Class</th>
+              <th>Score</th>
+              <th>Accuracy</th>
+              <th>Proficiency</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card tab-hidden" id="teacherCard" data-panel="teacher">
+      <h2>Teacher Overview</h2>
+      <p class="hint">Teacher page is locked. Enter both passwords.</p>
+
+      <div id="teacherLockBox" class="teacher-lock">
+        <div class="form-row">
+          <label for="teacherPwd1">Teacher Password 1</label>
+          <input id="teacherPwd1" type="password" inputmode="numeric" placeholder="Enter 8888">
+        </div>
+        <div class="form-row">
+          <label for="teacherPwd2">Teacher Password 2</label>
+          <input id="teacherPwd2" type="password" inputmode="numeric" placeholder="Enter 8888">
+        </div>
+        <button id="teacherUnlockBtn" class="btn btn-primary">Unlock Teacher Page</button>
+        <p id="teacherLockMsg" class="hint" aria-live="polite"></p>
+      </div>
+
+      <div id="teacherContent" class="hidden">
+        <p class="hint">Quick class insight from all saved student tests.</p>
+
+        <div class="summary-grid">
+          <div class="mini-stat">
+            <span>Total Students</span>
+            <strong id="teacherTotalStudents">0</strong>
+          </div>
+          <div class="mini-stat">
+            <span>Average Accuracy</span>
+            <strong id="teacherAvgAccuracy">0%</strong>
+          </div>
+          <div class="mini-stat">
+            <span>Top Proficiency</span>
+            <strong id="teacherTopBand">-</strong>
+          </div>
+        </div>
+
+        <div class="teacher-panels">
+          <div class="mini-panel">
+            <h3>Class Averages</h3>
+            <ul id="classSummaryList" class="compact-list"></ul>
+          </div>
+          <div class="mini-panel">
+            <h3>Common Weak Points</h3>
+            <ul id="weakPointsList" class="compact-list"></ul>
+          </div>
+        </div>
+
+        <div class="summary-actions">
+          <button id="clearDataBtn" class="btn btn-secondary">Clear All Student Data</button>
+        </div>
+        <p id="clearDataMsg" class="hint" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section class="card tab-hidden" id="platformerCard" data-panel="platformer">
+      <h2>Mario-style Clear Game</h2>
+      <p class="hint">Collect all coins and reach the flag to clear the stage.</p>
+
+      <div class="platformer-meta">
+        <span id="platformerCoins" class="hud-item">🪙 0 / 0</span>
+        <span id="platformerLives" class="hud-item">❤️ 3</span>
+        <span id="platformerState" class="hud-item">Ready</span>
+      </div>
+
+      <canvas id="platformerCanvas" width="760" height="320" aria-label="Mario style game canvas"></canvas>
+
+      <div class="summary-actions">
+        <button id="platformerStartBtn" class="btn btn-primary">Start Stage</button>
+        <button id="platformerResetBtn" class="btn btn-secondary">Reset Stage</button>
+      </div>
+
+      <div class="platformer-controls" aria-label="touch controls">
+        <button id="platformerLeftBtn" class="btn btn-secondary">⬅️</button>
+        <button id="platformerJumpBtn" class="btn btn-secondary">⬆️ Jump</button>
+        <button id="platformerRightBtn" class="btn btn-secondary">➡️</button>
+      </div>
+    </section>
+
+    <section class="card tab-hidden" id="wordGameCard" data-panel="wordgame">
+      <h2>Word Fill Game</h2>
+      <p class="hint">Spell the missing word to help Lynn finish the sentence.</p>
+
+      <div class="summary-grid">
+        <div class="mini-stat">
+          <span>Question</span>
+          <strong id="wordGameProgress">1 / 5</strong>
+        </div>
+        <div class="mini-stat">
+          <span>Score</span>
+          <strong id="wordGameScore">0</strong>
+        </div>
+        <div class="mini-stat">
+          <span>Status</span>
+          <strong id="wordGameStatus">Ready</strong>
+        </div>
+      </div>
+
+      <p id="wordGamePrompt" class="story-box">Press Start to play.</p>
+      <div class="form-row">
+        <label for="wordGameInput">Missing Word</label>
+        <input id="wordGameInput" type="text" placeholder="Type the missing word">
+      </div>
+
+      <div class="summary-actions">
+        <button id="wordGameStartBtn" class="btn btn-primary">Start Word Game</button>
+        <button id="wordGameCheckBtn" class="btn btn-secondary">Check</button>
+        <button id="wordGameNextBtn" class="btn btn-secondary">Next</button>
+      </div>
+      <p id="wordGameFeedback" class="hint" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+  <script src="platformer.js"></script>
+</body>
+</html>

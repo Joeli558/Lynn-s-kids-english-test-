@@ -7,36 +7,44 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Loading overlay -->
+  <div id="loadingOverlay" class="loading-overlay hidden" role="status" aria-live="polite">
+    <div class="loading-spinner" aria-hidden="true"></div>
+    <p>Loading... 加载中，请稍等～</p>
+  </div>
+
   <div class="deco deco-1" aria-hidden="true">🌸</div>
   <div class="deco deco-2" aria-hidden="true">✨</div>
   <div class="deco deco-3" aria-hidden="true">🦋</div>
   <main class="app-shell">
     <header class="hero">
       <h1>Lynn's Kids Garden</h1>
-      <p class="subtitle">A cute English adventure for KET students 🌼</p>
+      <p class="subtitle">KET English Adventure for Kids 🌼 少儿英语测试乐园</p>
     </header>
 
     <nav class="side-tabs" aria-label="main sections">
-      <button class="side-tab active" data-tab-target="student">Student Quiz</button>
-      <button class="side-tab" data-tab-target="wordgame">Word Fill Game</button>
-      <button class="side-tab" data-tab-target="platformer">Clear Game</button>
-      <button class="side-tab" data-tab-target="records">Student Records</button>
-      <button class="side-tab" data-tab-target="teacher">Teacher Page</button>
+      <button class="side-tab active" data-tab-target="student">Student Quiz 答题</button>
+      <button class="side-tab" data-tab-target="wordgame">Word Fill 填词</button>
+      <button class="side-tab" data-tab-target="platformer">Clear Game 通关</button>
+      <button class="side-tab" data-tab-target="records">Records 记录</button>
+      <button class="side-tab" data-tab-target="teacher">Teacher 教师</button>
     </nav>
 
+    <!-- ── Setup Card ──────────────────────────────── -->
     <section class="card" id="setupCard" data-panel="student">
-      <h2>Start Your Garden Journey</h2>
-      <p class="hint">Use CEFR children progression: ABC Gate -> Phonics -> KET.</p>
+      <h2>Start Your Garden Journey 🌱</h2>
+      <p class="hint">KET Children's English Test · Ages 6–12 · 少儿英语测试</p>
+      <p class="bilingual-hint">Use CEFR children progression: ABC Gate → Phonics → KET</p>
       <div class="form-row">
-        <label for="studentName">Student Name</label>
+        <label for="studentName">Student Name 学生姓名</label>
         <input id="studentName" type="text" maxlength="40" placeholder="e.g. Amy">
       </div>
       <div class="form-row">
-        <label for="studentClass">Class / Group</label>
+        <label for="studentClass">Class / Group 班级</label>
         <input id="studentClass" type="text" maxlength="40" placeholder="e.g. KET-A">
       </div>
       <div class="form-row">
-        <label for="entryGate">Entry Gate</label>
+        <label for="entryGate">Entry Gate 入学路径</label>
         <select id="entryGate">
           <option value="ABC Gate">ABC Gate (Early English Onboarding)</option>
           <option value="Phonics">Phonics (Natural Spelling Route)</option>
@@ -44,7 +52,7 @@
         </select>
       </div>
       <fieldset class="book-set">
-        <legend>Teaching Materials (Recorded for report)</legend>
+        <legend>Teaching Materials 教材 (Recorded for report)</legend>
         <label class="toggle-row" for="bookPowerUp">
           <input id="bookPowerUp" type="checkbox" checked>
           <span>Power Up</span>
@@ -58,24 +66,25 @@
           <span>Oxford Tree</span>
         </label>
       </fieldset>
-      <p class="hint">Reference: CEFR Child Language Development indicators (vocabulary, comprehension, output, interaction).</p>
+      <p class="hint">Reference: CEFR Child Language Development — vocabulary, comprehension, output, interaction.</p>
       <label class="toggle-row" for="timedModeToggle">
         <input id="timedModeToggle" type="checkbox">
-        <span>Timed Mode (20s per question)</span>
+        <span>Timed Mode ⏱ (20s per question · 每题20秒)</span>
       </label>
       <label class="toggle-row" for="soundToggle">
         <input id="soundToggle" type="checkbox">
-        <span>Sound Effects (countdown + victory)</span>
+        <span>Sound Effects 🔔 (countdown + victory)</span>
       </label>
-      <button id="startBtn" class="btn btn-primary">Start Adventure</button>
+      <button id="startBtn" class="btn btn-primary">Start Adventure 开始答题 🚀</button>
       <p id="setupError" class="error-text" aria-live="polite"></p>
     </section>
 
+    <!-- ── Quiz Card ───────────────────────────────── -->
     <section class="card hidden" id="quizCard" data-panel="student">
       <div class="top-meta">
         <span id="levelBadge" class="badge">Easy</span>
         <div class="top-right">
-          <span id="progressText" class="progress-text">Question 1 / 18</span>
+          <span id="progressText" class="progress-text">Question 1 / 21</span>
           <div class="game-hud">
             <span class="hud-item" id="livesValue">❤️ 3</span>
             <span class="hud-item" id="starsValue">⭐ 0</span>
@@ -87,106 +96,146 @@
       <div class="progress-bar" aria-hidden="true">
         <div id="progressFill" class="progress-fill"></div>
       </div>
+      <p id="progressPct" class="progress-pct">0% complete · 已完成 0%</p>
       <p id="levelBanner" class="level-banner hidden" aria-live="polite"></p>
 
-      <div class="story-box" id="storyCue"></div>
       <div class="question-meta">
         <span id="cefrTag" class="badge">CEFR: Pre-A1</span>
         <span id="skillTag" class="badge">Skill: Vocabulary</span>
       </div>
+
+      <!-- Story / reading box with zoom -->
+      <div class="story-box-wrap">
+        <div class="story-box" id="storyCue"></div>
+        <button id="zoomBtn" class="zoom-btn" type="button" aria-label="Zoom text 放大文字" title="Click to zoom · 点击放大">🔍</button>
+      </div>
+
       <figure id="questionFigure" class="question-figure hidden">
         <img id="questionImage" alt="Question visual cue">
       </figure>
-      <h2 id="questionText"></h2>
+
+      <!-- Listening simulation section (shown for listening questions) -->
+      <div id="listeningSection" class="listening-section hidden">
+        <div class="play-btn-wrap">
+          <button id="playAudioBtn" class="btn btn-primary" type="button" aria-label="Play audio 播放音频">▶ Play Audio 播放</button>
+          <button id="pauseAudioBtn" class="btn btn-secondary hidden" type="button" aria-label="Pause audio 暂停音频">⏸ Pause 暂停</button>
+        </div>
+        <p id="playStatus" class="play-status" aria-live="polite"></p>
+        <p class="hint" style="font-size:0.84rem; margin: 4px 0 0;">Each audio plays twice. 每段音频播放两次。</p>
+        <div id="transcriptReveal" class="transcript-reveal" aria-live="polite"></div>
+      </div>
+
+      <h2 id="questionText" style="margin-top: 10px;"></h2>
       <div id="optionsWrap" class="options-wrap"></div>
+
+      <!-- Writing section (shown for writing questions) -->
+      <div id="writingSection" class="writing-section hidden">
+        <div id="topicTagsRow" class="topic-tags-row">
+          <span style="font-size:0.9rem; font-weight:700; color: var(--muted);">Keywords 关键词:</span>
+        </div>
+        <textarea
+          id="writingInput"
+          class="writing-input"
+          placeholder="Write your answer here... 在这里写你的答案…"
+          aria-label="Writing answer input"
+          rows="5"
+        ></textarea>
+        <div class="writing-controls">
+          <button id="writingCaseBtn" class="writing-case-btn" type="button" aria-label="Toggle case 大小写切换">A/a</button>
+          <span id="wordCountDisplay" class="word-count">0 words · 0个单词</span>
+        </div>
+      </div>
+
       <div id="interactionWrap" class="interaction-wrap hidden"></div>
 
       <div class="feedback-row">
         <p id="feedbackText" class="feedback" aria-live="polite"></p>
-        <button id="nextBtn" class="btn btn-secondary hidden">Next</button>
+        <button id="nextBtn" class="btn btn-secondary hidden">Next 下一题 →</button>
       </div>
     </section>
 
+    <!-- ── Summary Card ────────────────────────────── -->
     <section class="card hidden" id="summaryCard" data-panel="student">
-      <h2>Garden Report</h2>
+      <h2>🌼 Garden Report 学习报告</h2>
       <p id="studentHeadline" class="summary-headline"></p>
       <div class="summary-grid">
         <div class="mini-stat">
-          <span>Total Score</span>
-          <strong id="totalScore">0 / 18</strong>
+          <span>Total Score 总分</span>
+          <strong id="totalScore">0 / 21</strong>
         </div>
         <div class="mini-stat">
-          <span>Accuracy</span>
+          <span>Accuracy 正确率</span>
           <strong id="accuracyRate">0%</strong>
         </div>
         <div class="mini-stat">
-          <span>Level Result</span>
+          <span>Level Result 等级</span>
           <strong id="proficiencyTag">Starter Bloom</strong>
         </div>
         <div class="mini-stat">
-          <span>Game Stars</span>
+          <span>Game Stars 星星</span>
           <strong id="gameStars">0</strong>
         </div>
         <div class="mini-stat">
-          <span>Best Combo</span>
+          <span>Best Combo 最佳连击</span>
           <strong id="bestCombo">x0</strong>
         </div>
         <div class="mini-stat">
-          <span>Predicted Word Bank</span>
+          <span>Predicted Word Bank 预测词汇量</span>
           <strong id="vocabPredict">0 words</strong>
         </div>
         <div class="mini-stat">
-          <span>Growth Zone (ZPD)</span>
+          <span>Growth Zone (ZPD) 成长空间</span>
           <strong id="zpdTag">-</strong>
         </div>
       </div>
       <p id="summaryAdvice" class="hint"></p>
       <section class="report-panel">
-        <h3>Feasibility Report</h3>
+        <h3>Feasibility Report 学习报告</h3>
         <p id="feasibilityIntro" class="hint"></p>
         <ul id="growthTrendList" class="compact-list"></ul>
       </section>
       <section class="report-panel">
-        <h3>Auto Scaffolder</h3>
+        <h3>Auto Scaffolder 个性化建议</h3>
         <div class="teacher-panels">
           <div class="mini-panel">
-            <h4>Parent Portal</h4>
+            <h4>Parent Portal 家长建议</h4>
             <ul id="parentScaffold" class="compact-list"></ul>
           </div>
           <div class="mini-panel">
-            <h4>Teacher Portal</h4>
+            <h4>Teacher Portal 教师建议</h4>
             <ul id="teacherScaffold" class="compact-list"></ul>
           </div>
           <div class="mini-panel">
-            <h4>Student Portal</h4>
+            <h4>Student Portal 学生建议</h4>
             <ul id="studentScaffold" class="compact-list"></ul>
           </div>
         </div>
       </section>
       <div class="badge-wall">
-        <h3>Badge Wall</h3>
+        <h3>Badge Wall 成就徽章 🏅</h3>
         <ul id="badgeWallList" class="badge-list"></ul>
       </div>
 
       <div class="summary-actions">
-        <button id="restartBtn" class="btn btn-primary">New Student Test</button>
-        <button id="exportCurrentBtn" class="btn btn-secondary">Export Current JSON</button>
+        <button id="restartBtn" class="btn btn-primary">New Student Test 新测试</button>
+        <button id="exportCurrentBtn" class="btn btn-secondary">Export JSON</button>
         <button id="exportCsvBtn" class="btn btn-secondary">Export All CSV</button>
       </div>
     </section>
 
+    <!-- ── Student Records Card ───────────────────── -->
     <section class="card" id="historyCard" data-panel="records">
-      <h2>Saved Student Reports</h2>
+      <h2>Saved Student Reports 学生记录</h2>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Class</th>
-              <th>Score</th>
-              <th>Accuracy</th>
-              <th>Proficiency</th>
-              <th>Time</th>
+              <th>Name 姓名</th>
+              <th>Class 班级</th>
+              <th>Score 分数</th>
+              <th>Accuracy 正确率</th>
+              <th>Proficiency 等级</th>
+              <th>Time 时间</th>
             </tr>
           </thead>
           <tbody id="historyBody"></tbody>
@@ -194,62 +243,64 @@
       </div>
     </section>
 
+    <!-- ── Teacher Card ───────────────────────────── -->
     <section class="card tab-hidden" id="teacherCard" data-panel="teacher">
-      <h2>Teacher Overview</h2>
-      <p class="hint">Teacher page is locked. Enter both passwords.</p>
+      <h2>Teacher Overview 教师总览</h2>
+      <p class="hint">Teacher page is locked. Enter both passwords. 教师页面已锁定，请输入密码。</p>
 
       <div id="teacherLockBox" class="teacher-lock">
         <div class="form-row">
-          <label for="teacherPwd1">Teacher Password 1</label>
+          <label for="teacherPwd1">Teacher Password 1 教师密码1</label>
           <input id="teacherPwd1" type="password" inputmode="numeric" placeholder="Enter 8888">
         </div>
         <div class="form-row">
-          <label for="teacherPwd2">Teacher Password 2</label>
+          <label for="teacherPwd2">Teacher Password 2 教师密码2</label>
           <input id="teacherPwd2" type="password" inputmode="numeric" placeholder="Enter 8888">
         </div>
-        <button id="teacherUnlockBtn" class="btn btn-primary">Unlock Teacher Page</button>
+        <button id="teacherUnlockBtn" class="btn btn-primary">Unlock 解锁</button>
         <p id="teacherLockMsg" class="hint" aria-live="polite"></p>
       </div>
 
       <div id="teacherContent" class="hidden">
-        <p class="hint">Quick class insight from all saved student tests.</p>
+        <p class="hint">Quick class insight from all saved student tests. 所有学生测试数据概览。</p>
 
         <div class="summary-grid">
           <div class="mini-stat">
-            <span>Total Students</span>
+            <span>Total Students 学生总数</span>
             <strong id="teacherTotalStudents">0</strong>
           </div>
           <div class="mini-stat">
-            <span>Average Accuracy</span>
+            <span>Average Accuracy 平均正确率</span>
             <strong id="teacherAvgAccuracy">0%</strong>
           </div>
           <div class="mini-stat">
-            <span>Top Proficiency</span>
+            <span>Top Proficiency 最高等级</span>
             <strong id="teacherTopBand">-</strong>
           </div>
         </div>
 
         <div class="teacher-panels">
           <div class="mini-panel">
-            <h3>Class Averages</h3>
+            <h3>Class Averages 班级平均</h3>
             <ul id="classSummaryList" class="compact-list"></ul>
           </div>
           <div class="mini-panel">
-            <h3>Common Weak Points</h3>
+            <h3>Common Weak Points 常见弱项</h3>
             <ul id="weakPointsList" class="compact-list"></ul>
           </div>
         </div>
 
         <div class="summary-actions">
-          <button id="clearDataBtn" class="btn btn-secondary">Clear All Student Data</button>
+          <button id="clearDataBtn" class="btn btn-secondary">Clear All Data 清除所有数据</button>
         </div>
         <p id="clearDataMsg" class="hint" aria-live="polite"></p>
       </div>
     </section>
 
+    <!-- ── Platformer Card ───────────────────────── -->
     <section class="card tab-hidden" id="platformerCard" data-panel="platformer">
-      <h2>Mario-style Clear Game</h2>
-      <p class="hint">Collect all coins and reach the flag to clear the stage.</p>
+      <h2>Mario-style Clear Game 通关小游戏 🕹️</h2>
+      <p class="hint">Collect all coins and reach the flag to clear the stage. 收集所有金币并到达终点旗帜！</p>
 
       <div class="platformer-meta">
         <span id="platformerCoins" class="hud-item">🪙 0 / 0</span>
@@ -260,46 +311,47 @@
       <canvas id="platformerCanvas" width="760" height="320" aria-label="Mario style game canvas"></canvas>
 
       <div class="summary-actions">
-        <button id="platformerStartBtn" class="btn btn-primary">Start Stage</button>
-        <button id="platformerResetBtn" class="btn btn-secondary">Reset Stage</button>
+        <button id="platformerStartBtn" class="btn btn-primary">Start Stage 开始</button>
+        <button id="platformerResetBtn" class="btn btn-secondary">Reset Stage 重置</button>
       </div>
 
       <div class="platformer-controls" aria-label="touch controls">
-        <button id="platformerLeftBtn" class="btn btn-secondary">⬅️</button>
+        <button id="platformerLeftBtn" class="btn btn-secondary">⬅️ Left</button>
         <button id="platformerJumpBtn" class="btn btn-secondary">⬆️ Jump</button>
-        <button id="platformerRightBtn" class="btn btn-secondary">➡️</button>
+        <button id="platformerRightBtn" class="btn btn-secondary">➡️ Right</button>
       </div>
     </section>
 
+    <!-- ── Word Fill Card ─────────────────────────── -->
     <section class="card tab-hidden" id="wordGameCard" data-panel="wordgame">
-      <h2>Word Fill Game</h2>
-      <p class="hint">Spell the missing word to help Lynn finish the sentence.</p>
+      <h2>Word Fill Game 填词游戏 ✏️</h2>
+      <p class="hint">Spell the missing word to help Lynn finish the sentence. 拼写缺少的单词，帮助Lynn完成句子！</p>
 
       <div class="summary-grid">
         <div class="mini-stat">
-          <span>Question</span>
+          <span>Question 题目</span>
           <strong id="wordGameProgress">1 / 5</strong>
         </div>
         <div class="mini-stat">
-          <span>Score</span>
+          <span>Score 得分</span>
           <strong id="wordGameScore">0</strong>
         </div>
         <div class="mini-stat">
-          <span>Status</span>
+          <span>Status 状态</span>
           <strong id="wordGameStatus">Ready</strong>
         </div>
       </div>
 
-      <p id="wordGamePrompt" class="story-box">Press Start to play.</p>
+      <p id="wordGamePrompt" class="story-box">Press Start to play. 点击开始游戏。</p>
       <div class="form-row">
-        <label for="wordGameInput">Missing Word</label>
-        <input id="wordGameInput" type="text" placeholder="Type the missing word">
+        <label for="wordGameInput">Missing Word 缺失单词</label>
+        <input id="wordGameInput" type="text" placeholder="Type the missing word 输入单词">
       </div>
 
       <div class="summary-actions">
-        <button id="wordGameStartBtn" class="btn btn-primary">Start Word Game</button>
-        <button id="wordGameCheckBtn" class="btn btn-secondary">Check</button>
-        <button id="wordGameNextBtn" class="btn btn-secondary">Next</button>
+        <button id="wordGameStartBtn" class="btn btn-primary">Start Word Game 开始</button>
+        <button id="wordGameCheckBtn" class="btn btn-secondary">Check 检查</button>
+        <button id="wordGameNextBtn" class="btn btn-secondary">Next 下一题</button>
       </div>
       <p id="wordGameFeedback" class="hint" aria-live="polite"></p>
     </section>

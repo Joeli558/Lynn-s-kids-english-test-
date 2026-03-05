@@ -26,7 +26,7 @@
 
     <section class="card" id="setupCard" data-panel="student">
       <h2>Start Your Garden Journey</h2>
-      <p class="hint">Enter student info and begin from easy to hard questions.</p>
+      <p class="hint">Use CEFR children progression: ABC Gate -> Phonics -> KET.</p>
       <div class="form-row">
         <label for="studentName">Student Name</label>
         <input id="studentName" type="text" maxlength="40" placeholder="e.g. Amy">
@@ -35,6 +35,30 @@
         <label for="studentClass">Class / Group</label>
         <input id="studentClass" type="text" maxlength="40" placeholder="e.g. KET-A">
       </div>
+      <div class="form-row">
+        <label for="entryGate">Entry Gate</label>
+        <select id="entryGate">
+          <option value="ABC Gate">ABC Gate (Early English Onboarding)</option>
+          <option value="Phonics">Phonics (Natural Spelling Route)</option>
+          <option value="KET">KET (Cambridge A2 Track)</option>
+        </select>
+      </div>
+      <fieldset class="book-set">
+        <legend>Teaching Materials (Recorded for report)</legend>
+        <label class="toggle-row" for="bookPowerUp">
+          <input id="bookPowerUp" type="checkbox" checked>
+          <span>Power Up</span>
+        </label>
+        <label class="toggle-row" for="bookThink">
+          <input id="bookThink" type="checkbox">
+          <span>Think</span>
+        </label>
+        <label class="toggle-row" for="bookOxfordTree">
+          <input id="bookOxfordTree" type="checkbox">
+          <span>Oxford Tree</span>
+        </label>
+      </fieldset>
+      <p class="hint">Reference: CEFR Child Language Development indicators (vocabulary, comprehension, output, interaction).</p>
       <label class="toggle-row" for="timedModeToggle">
         <input id="timedModeToggle" type="checkbox">
         <span>Timed Mode (20s per question)</span>
@@ -66,8 +90,16 @@
       <p id="levelBanner" class="level-banner hidden" aria-live="polite"></p>
 
       <div class="story-box" id="storyCue"></div>
+      <div class="question-meta">
+        <span id="cefrTag" class="badge">CEFR: Pre-A1</span>
+        <span id="skillTag" class="badge">Skill: Vocabulary</span>
+      </div>
+      <figure id="questionFigure" class="question-figure hidden">
+        <img id="questionImage" alt="Question visual cue">
+      </figure>
       <h2 id="questionText"></h2>
       <div id="optionsWrap" class="options-wrap"></div>
+      <div id="interactionWrap" class="interaction-wrap hidden"></div>
 
       <div class="feedback-row">
         <p id="feedbackText" class="feedback" aria-live="polite"></p>
@@ -99,8 +131,38 @@
           <span>Best Combo</span>
           <strong id="bestCombo">x0</strong>
         </div>
+        <div class="mini-stat">
+          <span>Predicted Word Bank</span>
+          <strong id="vocabPredict">0 words</strong>
+        </div>
+        <div class="mini-stat">
+          <span>Growth Zone (ZPD)</span>
+          <strong id="zpdTag">-</strong>
+        </div>
       </div>
       <p id="summaryAdvice" class="hint"></p>
+      <section class="report-panel">
+        <h3>Feasibility Report</h3>
+        <p id="feasibilityIntro" class="hint"></p>
+        <ul id="growthTrendList" class="compact-list"></ul>
+      </section>
+      <section class="report-panel">
+        <h3>Auto Scaffolder</h3>
+        <div class="teacher-panels">
+          <div class="mini-panel">
+            <h4>Parent Portal</h4>
+            <ul id="parentScaffold" class="compact-list"></ul>
+          </div>
+          <div class="mini-panel">
+            <h4>Teacher Portal</h4>
+            <ul id="teacherScaffold" class="compact-list"></ul>
+          </div>
+          <div class="mini-panel">
+            <h4>Student Portal</h4>
+            <ul id="studentScaffold" class="compact-list"></ul>
+          </div>
+        </div>
+      </section>
       <div class="badge-wall">
         <h3>Badge Wall</h3>
         <ul id="badgeWallList" class="badge-list"></ul>
